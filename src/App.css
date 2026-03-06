@@ -12,3 +12,11 @@ html, body, #root {
   margin: 0;
 }
 
+.stat-card-premium { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+       .stat-card-premium:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.09); }
+       .activity-row-premium { transition: background 0.15s; }
+       .activity-row-premium:hover { background: rgba(0,0,0,0.018); cursor: pointer; }
+       .qa-btn-premium { transition: all 0.15s ease; }
+       .qa-btn-premium:hover { background: rgba(201,168,76,0.08) !important; }
+       @keyframes fadeUpIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+       .fade-up-premium { animation: fadeUpIn 0.45s ease forwards; opacity: 0; }

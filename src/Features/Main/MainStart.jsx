@@ -832,8 +832,8 @@ export default function MainStart() {
   const notifRef = useRef(null);
   const profileRef = useRef(null);
 
-  const companyName = "Tanwood";
-  const loggedUser = "Jeorge David";
+  const companyName = "Calicut - Branch";
+  const loggedUser = "Tanwood Leather Pvt. Ltd.";
   const userInitials = "JD";
 
   useEffect(() => {
@@ -849,6 +849,24 @@ export default function MainStart() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+   const MiniSparkline = ({ color = "#C9A84C" }) => {
+         const pts = [28,52,38,68,55,80,70,92];
+         const mx = Math.max(...pts); const W=72,H=32;
+         const d = pts.map((v,i)=>`${(i/(pts.length-1))*W},${H-(v/mx)*H}`).join(" ");
+         return (
+           <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
+             <defs><linearGradient id={`sg${color.replace("#","")}`} x1="0" y1="0" x2="0" y2="1">
+               <stop offset="0%" stopColor={color} stopOpacity="0.25"/>
+               <stop offset="100%" stopColor={color} stopOpacity="0"/>
+             </linearGradient></defs>
+             <polygon points={`0,${H} ${d} ${W},${H}`} fill={`url(#sg${color.replace("#","")})`}/>
+             <polyline points={d} stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+           </svg>
+         );
+       };
+
+       
 
   const formatDate = (d) => d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
   const formatTime = (d) => d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
@@ -888,7 +906,7 @@ export default function MainStart() {
         <div className="fixed inset-0 bg-black/25 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* ══ SIDEBAR ══════════════════════════════════════════ */}
+      {/*  SIDEBAR */}
       <aside
         className="sidebar-anim fixed lg:relative top-0 left-0 h-full z-30 flex flex-col bg-white border-r border-gray-100 shadow-sm overflow-hidden"
         style={{ width: sidebarW, minHeight: "100vh" }}
@@ -1010,9 +1028,9 @@ export default function MainStart() {
         {/* User card */}
         <div className="shrink-0 border-t border-gray-100 p-3">
           <div className="flex items-center gap-2.5 bg-gray-50 rounded-xl p-2.5">
-            <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">
+            {/* <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow">
               {userInitials}
-            </div>
+            </div> */}
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-gray-800 truncate">{loggedUser}</p>
               <p className="text-[10px] text-gray-400 truncate">{companyName}</p>
@@ -1139,97 +1157,390 @@ export default function MainStart() {
 
         {/* Content area */}
         <div className="flex-1 flex overflow-hidden">
-          <main className="flex-1 overflow-y-auto scrollbar-hide p-5">
-            {/* Page heading */}
-            <div className="mb-5 fade-in">
-              <h1 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'DM Serif Display', serif" }}>
-                {activePage.item || activePage.module}
-              </h1>
-              <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1.5">
-                <Calendar className="w-3 h-3" />
-                {formatDate(currentTime)} · {companyName}
-              </p>
-            </div>
+         <main className="flex-1 overflow-y-auto scrollbar-hide p-6 bg-[#f7f8fc]">
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-              {QUICK_STATS.map((s, i) => {
-                const Icon = s.icon;
-                return (
+  {/* Page Heading */}
+  <div className="mb-6 fade-in">
+    <div className="flex items-center justify-between">
+      <div>
+        <h1
+          className="text-2xl font-bold text-gray-900 tracking-tight"
+          style={{ fontFamily:"segoe ui variable, sans-serif" }}
+        >
+          {activePage.item || activePage.module}
+        </h1>
+        <p className="text-xs text-gray-400 mt-1 flex items-center gap-1.5">
+          <Calendar className="w-3 h-3" />
+          {formatDate(currentTime)} · {companyName}
+        </p>
+      </div>
+      <div className="flex items-center gap-2">
+        <button className="text-xs font-medium bg-white border border-gray-200 text-gray-600 px-3 py-1.5 rounded-lg shadow-sm hover:border-blue-300 hover:text-blue-600 transition-all">
+          Export
+        </button>
+        <button className="text-xs font-semibold bg-blue-600 text-white px-3 py-1.5 rounded-lg shadow-sm hover:bg-blue-700 transition-all">
+          + New
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {/* Stats */}
+  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+    {QUICK_STATS.map((s, i) => {
+      const Icon = s.icon;
+      return (
+        <div
+          key={i}
+          className={`relative overflow-hidden rounded-2xl border ${s.border} ${s.bg} p-4 cursor-pointer fade-in group hover:shadow-md transition-all`}
+          style={{ animationDelay: `${i * 0.06}s` }}
+        >
+          {/* Decorative circle */}
+          <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full opacity-10 bg-current pointer-events-none" />
+
+          <div className="flex items-start justify-between mb-3">
+            <div className="p-2 rounded-xl bg-white shadow-sm group-hover:scale-110 transition-transform">
+              <Icon className={`w-4 h-4 ${s.color}`} />
+            </div>
+            <span
+              className={`text-[10px] font-semibold flex items-center gap-0.5 px-1.5 py-0.5 rounded-full ${
+                s.up
+                  ? "text-emerald-700 bg-emerald-100"
+                  : "text-gray-500 bg-gray-100"
+              }`}
+            >
+              {s.up && <ArrowUpRight className="w-3 h-3" />}
+              {s.change}
+            </span>
+          </div>
+          <p className="text-2xl font-extrabold text-gray-900 tracking-tight">{s.value}</p>
+          <p className="text-[11px] text-gray-500 mt-0.5 font-medium">{s.label}</p>
+        </div>
+      );
+    })}
+  </div>
+
+  {/* Bottom Grid */}
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+    {/* Recent Activity */}
+    <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between bg-linear-to-r from-white to-gray-50">
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-4 rounded-full bg-blue-500" />
+          <span className="text-sm font-semibold text-gray-800">Recent Activity</span>
+        </div>
+        <button className="text-[11px] text-blue-600 hover:underline font-semibold bg-blue-50 px-2.5 py-1 rounded-lg transition-colors hover:bg-blue-100">
+          View all
+        </button>
+      </div>
+
+      <div className="divide-y divide-gray-50">
+        {RECENT_ACTIVITY.map((a, i) => {
+          const Icon = a.icon;
+          return (
+            <div
+              key={i}
+              className="flex items-center gap-3 px-5 py-3 hover:bg-blue-50/40 cursor-pointer transition-colors group"
+            >
+              <div className={`p-2 rounded-xl shrink-0 group-hover:scale-105 transition-transform ${a.bgColor || "bg-gray-100"}`}>
+                <Icon className={`w-3.5 h-3.5 ${a.color}`} />
+              </div>
+              <p className="flex-1 text-xs text-gray-700 leading-relaxed">{a.text}</p>
+              <span className="text-[10px] text-gray-400 shrink-0 bg-gray-50 px-2 py-0.5 rounded-full">
+                {a.time}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    {/* Quick Access */}
+    {/* <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-gray-100 bg-linear-to-r from-white to-gray-50 flex items-center gap-2">
+        <div className="w-1.5 h-4 rounded-full bg-violet-500" />
+        <span className="text-sm font-semibold text-gray-800">Quick Access</span>
+      </div>
+      <div className="p-3 space-y-0.5">
+        {ALL_MODULES.slice(0, 7).map((mod) => {
+          const Icon = MODULE_ICON_MAP[mod.name] || Hash;
+          const badge = MODULE_BADGES[mod.name];
+          const isActive = activeModule === mod.name;
+          return (
+            <button
+              key={mod.name}
+              onClick={() => {
+                setActivePage({ module: mod.name, item: null });
+                setActiveModule(mod.name);
+              }}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left group ${
+                isActive
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "hover:bg-blue-50 text-gray-600 hover:text-blue-700"
+              }`}
+            >
+              <div className={`p-1.5 rounded-lg shrink-0 transition-colors ${
+                isActive ? "bg-white/20" : "bg-gray-100 group-hover:bg-blue-100"
+              }`}>
+                <Icon className={`w-3 h-3 ${isActive ? "text-white" : "text-gray-400 group-hover:text-blue-500"}`} />
+              </div>
+              <span className={`flex-1 text-xs font-medium ${isActive ? "text-white" : ""}`}>
+                {mod.name}
+              </span>
+              {badge && (
+                <span
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                    isActive
+                      ? "bg-white/25 text-white"
+                      : `text-white ${badge.color}`
+                  }`}
+                >
+                  {badge.count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div> */}
+{/* =====================================================
+    TOP REVENUE DEPARTMENTS — Senior UI
+    Drop-in for your right column (replaces Quick Access)
+    Self-contained data — swap DEPT_DATA for your API
+    ===================================================== */}
+
+{(() => {
+  const DEPT_DATA = [
+    { name: "Sales",      revenue: 284500, change: +18.4, color: "#3B6FE8" },
+    { name: "Operations", revenue: 196200, change: +9.1,  color: "#0EA5A0" },
+    { name: "Retail",     revenue: 158900, change: +5.7,  color: "#8B5CF6" },
+    { name: "Logistics",  revenue: 112400, change: -2.3,  color: "#F59E0B" },
+    { name: "Marketing",  revenue:  89700, change: +12.1, color: "#EC4899" },
+    { name: "Finance",    revenue:  74300, change: -1.1,  color: "#10B981" },
+  ].sort((a, b) => b.revenue - a.revenue);
+
+  const total   = DEPT_DATA.reduce((s, d) => s + d.revenue, 0);
+  const maxRev  = DEPT_DATA[0].revenue;
+  const fmt     = (n) => n >= 1e6 ? `$${(n/1e6).toFixed(2)}M` : `$${(n/1e3).toFixed(1)}K`;
+  const fmtFull = (n) => `$${n.toLocaleString()}`;
+
+  /* Initials avatar */
+  const initials = (name) => name.slice(0, 2).toUpperCase();
+
+  return (
+    <>
+      <style>{`
+        @keyframes barGrow {
+          from { width: 0%; }
+          to   { width: var(--w); }
+        }
+        .dept-bar {
+          height: 100%;
+          border-radius: 99px;
+          animation: barGrow 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+          animation-delay: var(--delay);
+          width: 0%;
+        }
+        .dept-row {
+          transition: background 0.18s ease, transform 0.18s ease;
+          border-radius: 14px;
+          cursor: default;
+        }
+        .dept-row:hover {
+          background: rgba(59,111,232,0.04) !important;
+          transform: translateX(2px);
+        }
+        .dept-rank-1 { background: linear-gradient(135deg,#3B6FE8,#6B9FFF); color:#fff; }
+        .dept-rank-other { background: #F1F4FD; color: #8896B3; }
+      `}</style>
+
+      <div style={{
+        background: "#FFFFFF",
+        borderRadius: 20,
+        border: "1px solid #ECEEF5",
+        overflow: "hidden",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(59,111,232,0.06)",
+      }}>
+
+        {/* ── Header ── */}
+        <div style={{
+          padding: "18px 20px 14px",
+          background: "linear-gradient(135deg, #F8F9FF 0%, #EEF2FF 100%)",
+          borderBottom: "1px solid #E8ECFA",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+        }}>
+          <div>
+            <p style={{
+              fontSize: 10, fontWeight: 700, letterSpacing: "0.14em",
+              textTransform: "uppercase", color: "#A0ABCC", marginBottom: 4,
+            }}>
+              This Quarter
+            </p>
+            <h3 style={{
+              fontSize: 16, fontWeight: 800, color: "#0F1729",
+              letterSpacing: "-0.02em", margin: 0,
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
+              Revenue by Department
+            </h3>
+          </div>
+          {/* Live badge */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: 5,
+            background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)",
+            borderRadius: 20, padding: "4px 10px",
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: "50%",
+              background: "#10B981", display: "inline-block",
+              boxShadow: "0 0 0 3px rgba(16,185,129,0.2)",
+              animation: "pulse 2s infinite",
+            }} />
+            <span style={{ fontSize: 10, fontWeight: 600, color: "#10B981", letterSpacing: "0.05em" }}>
+              LIVE
+            </span>
+          </div>
+        </div>
+
+        {/* ── Department Rows ── */}
+        <div style={{ padding: "10px 12px 6px" }}>
+          {DEPT_DATA.map((dept, i) => {
+            const pct     = Math.round((dept.revenue / maxRev) * 100);
+            const share   = ((dept.revenue / total) * 100).toFixed(1);
+            const isUp    = dept.change >= 0;
+            const isFirst = i === 0;
+
+            return (
+              <div
+                key={dept.name}
+                className="dept-row"
+                style={{ padding: "10px 8px", marginBottom: 2 }}
+              >
+                {/* Row top: avatar + name + value + pill */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+
+                  {/* Rank / Avatar */}
                   <div
-                    key={i}
-                    className={`stat-hover rounded-xl border ${s.border} ${s.bg} p-4 cursor-pointer fade-in`}
-                    style={{ animationDelay: `${i * 0.06}s` }}
+                    className={isFirst ? "dept-rank-1" : "dept-rank-other"}
+                    style={{
+                      width: 32, height: 32, borderRadius: 10, flexShrink: 0,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 10, fontWeight: 800, letterSpacing: "0.02em",
+                    }}
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="p-2 rounded-lg bg-white shadow-sm">
-                        <Icon className={`w-4 h-4 ${s.color}`} />
-                      </div>
-                      <span className={`text-[10px] font-semibold flex items-center gap-0.5 ${s.up ? "text-emerald-600" : "text-gray-500"}`}>
-                        {s.up && <ArrowUpRight className="w-3 h-3" />}
-                        {s.change}
-                      </span>
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{s.value}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
+                    {isFirst ? initials(dept.name) : `#${i + 1}`}
                   </div>
-                );
-              })}
-            </div>
 
-            {/* Bottom grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              {/* Activity */}
-              <div className="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-800">Recent Activity</span>
-                  <button className="text-[11px] text-blue-600 hover:underline font-medium">View all</button>
-                </div>
-                {RECENT_ACTIVITY.map((a, i) => {
-                  const Icon = a.icon;
-                  return (
-                    <div key={i} className="flex items-center gap-3 px-4 py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 cursor-pointer transition-colors">
-                      <div className="p-2 bg-gray-100 rounded-lg shrink-0">
-                        <Icon className={`w-3.5 h-3.5 ${a.color}`} />
-                      </div>
-                      <p className="flex-1 text-xs text-gray-700">{a.text}</p>
-                      <span className="text-[10px] text-gray-400 shrink-0">{a.time}</span>
-                    </div>
-                  );
-                })}
-              </div>
+                  {/* Name + share */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{
+                      fontSize: 12, fontWeight: 700, color: "#1A2340",
+                      margin: 0, letterSpacing: "0.01em",
+                      whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                    }}>
+                      {dept.name}
+                    </p>
+                    <p style={{ fontSize: 10, color: "#A0ABCC", margin: 0, marginTop: 1 }}>
+                      {share}% of total
+                    </p>
+                  </div>
 
-              {/* Quick Access */}
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="px-4 py-3 border-b border-gray-100">
-                  <span className="text-sm font-semibold text-gray-800">Quick Access</span>
+                  {/* Revenue */}
+                  <span style={{
+                    fontSize: 13, fontWeight: 800, color: "#0F1729",
+                    letterSpacing: "-0.02em", flexShrink: 0,
+                  }}>
+                    {fmt(dept.revenue)}
+                  </span>
+
+                  {/* Change pill */}
+                  <span style={{
+                    fontSize: 10, fontWeight: 700, flexShrink: 0,
+                    padding: "3px 7px", borderRadius: 20,
+                    background: isUp ? "rgba(16,185,129,0.09)" : "rgba(239,68,68,0.09)",
+                    color: isUp ? "#059669" : "#DC2626",
+                    letterSpacing: "0.02em",
+                  }}>
+                    {isUp ? "+" : ""}{dept.change}%
+                  </span>
                 </div>
-                <div className="p-3">
-                  {ALL_MODULES.slice(0, 7).map((mod) => {
-                    const Icon = MODULE_ICON_MAP[mod.name] || Hash;
-                    const badge = MODULE_BADGES[mod.name];
-                    return (
-                      <button
-                        key={mod.name}
-                        onClick={() => { setActivePage({ module: mod.name, item: null }); setActiveModule(mod.name); }}
-                        className="nav-btn w-full flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 text-gray-600"
-                      >
-                        <Icon className="w-3.5 h-3.5 shrink-0 text-gray-400" />
-                        <span className="flex-1 text-xs text-left">{mod.name}</span>
-                        {badge && (
-                          <span className={`text-[10px] font-bold text-white px-1.5 py-0.5 rounded-full ${badge.color}`}>
-                            {badge.count}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
+
+                {/* Progress bar track */}
+                <div style={{
+                  height: 5, borderRadius: 99,
+                  background: "#F1F4FD", overflow: "hidden",
+                }}>
+                  <div
+                    className="dept-bar"
+                    style={{
+                      "--w": `${pct}%`,
+                      "--delay": `${0.1 + i * 0.08}s`,
+                      background: `linear-gradient(90deg, ${dept.color}99, ${dept.color})`,
+                    }}
+                  />
                 </div>
               </div>
-            </div>
-          </main>
+            );
+          })}
+        </div>
 
-          {/* Right tool panel */}
+        {/* ── Footer Summary ── */}
+        <div style={{
+          margin: "6px 12px 12px",
+          borderRadius: 14,
+          background: "linear-gradient(135deg, #F0F4FF, #EBF0FF)",
+          border: "1px solid #DDE4F8",
+          padding: "12px 14px",
+          display: "flex", alignItems: "center", gap: 0,
+        }}>
+          {/* Total */}
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 10, color: "#A0ABCC", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3 }}>
+              Total
+            </p>
+            <p style={{ fontSize: 18, fontWeight: 900, color: "#0F1729", letterSpacing: "-0.03em", margin: 0 }}>
+              {fmt(total)}
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div style={{ width: 1, height: 36, background: "#D4DCEF", margin: "0 16px" }} />
+
+          {/* Leader */}
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 10, color: "#A0ABCC", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3 }}>
+              Leader
+            </p>
+            <p style={{ fontSize: 13, fontWeight: 800, color: "#3B6FE8", letterSpacing: "-0.01em", margin: 0 }}>
+              {DEPT_DATA[0].name}
+              <span style={{ fontSize: 10, color: "#A0ABCC", fontWeight: 500, marginLeft: 5 }}>
+                {Math.round((DEPT_DATA[0].revenue / total) * 100)}% share
+              </span>
+            </p>
+          </div>
+
+          {/* Arrow button */}
+          <div style={{
+            width: 30, height: 30, borderRadius: 9,
+            background: "#3B6FE8",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", flexShrink: 0,
+            boxShadow: "0 4px 12px rgba(59,111,232,0.3)",
+          }}>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <path d="M5 3.5L8.5 6.5L5 9.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </>
+  );
+})()}
+  </div>
+</main>
+
          
         </div>
       </div>
