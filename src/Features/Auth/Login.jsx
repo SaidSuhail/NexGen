@@ -197,17 +197,53 @@
 import React, { useState } from "react";
 import { Nfc, Smartphone, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import api from "../../Api/axios";
 function Login() {
   const [username, setUsername] = useState("");
   const [branch, setBranch] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate("/main");
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+
+    const response = await api.post(
+      "/COM_API_/CMUser/LoginUser",
+      {
+        user_name: username,
+        user_role_id: 1,
+        password_hash: password
+      }
+    );
+
+    console.log(response.data);
+
+    if (response.data.status) {
+
+      // Save token
+      localStorage.setItem(
+        "token",
+        response.data.data.accessToken
+      );
+
+      // Go to dashboard
+      navigate("/main");
+
+    } else {
+
+      alert(response.data.statusMsg);
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+    alert("Login failed");
+
+  }
+};
 
   return (
     <div className="fixed inset-0 w-screen h-screen flex overflow-hidden bg-linear-to-br from-gray-50 to-blue-50 lg:items-center lg:justify-center lg:p-4">
