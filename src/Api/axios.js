@@ -1,7 +1,10 @@
 import axios from "axios";
-
+const baseURL =
+  window.location.hostname === "localhost"
+    ? "https://localhost:7088"
+    : "https://commonmaster-v1-7.onrender.com";
 const api = axios.create({
-  baseURL: "https://localhost:7088",
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json"
   }
