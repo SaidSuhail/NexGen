@@ -213,7 +213,6 @@ const handleSubmit = async (e) => {
       "/COM_API_/CMUser/LoginUser",
       {
         user_name: username,
-        user_role_id: 1,
         password_hash: password
       }
     );
@@ -318,27 +317,7 @@ const handleSubmit = async (e) => {
                   </label>
                 </div>
 
-                {/* Branch */}
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="branch"
-                    value={branch}
-                    onChange={(e) => setBranch(e.target.value)}
-                    required
-                    placeholder=" "
-                    className="peer w-full px-5 py-3 rounded-2xl border border-gray-200 bg-white text-gray-800 text-sm
-                      focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
-                  />
-                  <label
-                    htmlFor="branch"
-                    className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none transition-all
-                      peer-focus:top-2 peer-focus:text-xs peer-focus:text-slate-600
-                      peer-not-placeholder-shown:top-2 peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500"
-                  >
-                    Branch
-                  </label>
-                </div>
+                
 
                 {/* Password */}
                 <div className="relative">
