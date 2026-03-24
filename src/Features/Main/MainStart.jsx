@@ -2070,6 +2070,7 @@ const ALL_MODULES = [
       { label: "Locations", path: "/main/locations" },
       { label: "Business Units", path: "/main/business-units" },
       { label: "Compliance", path: "/main/compliance" },
+      {label: "Branch Management", path: "/main/branches" },
     ],
   },
   {

@@ -4,3 +4,8 @@ export const getUsers = async () => {
   const response = await api.get("/COM_API_/CMUser/GetAllUsers");
   return response.data;
 };
+
+export const CreateUser = async (userData) => {
+  const response = await api.post("/COM_API_/CMUser/RegisterUser", userData);
+  return response.data;
+}
